@@ -26,7 +26,7 @@ class SharePoint():
         else:
             raise Exception('Unknown webdriver type')    
  
-        self.site = 'https://education.sptest16.depaul.edu/'
+        self.site = 'https://education.edu/'
         self.admin_pg = '_layouts/15/sitemanager.aspx'
         self.setting_pg = '/_layouts/15/Settings.aspx'
         self.nav_pg = '/_layouts/15/AreaNavigationSettings.aspx'

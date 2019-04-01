@@ -8,13 +8,13 @@ def pytest_addoption(parser):
                                , default = "chrome"
                                , help = "Type in browser type")
     parser.addoption("--url"   , action = "store"
-                               , default = "https://education.sptest16.depaul.edu"
+                               , default = "https://education.edu"
                                , help = "url")
     parser.addoption("--file", action = "store"
                                  , default = "account.txt"
                                  , help = "credentialFile")
     parser.addoption("--username", action = "store"
-                                 , default = "pwongcha"
+                                 , default = "username1"
                                  , help = "campus connect username")                                 
 
 
