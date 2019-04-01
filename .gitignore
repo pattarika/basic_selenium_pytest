@@ -1,3 +1,4 @@
 account.txt
 venv
 *.log
+__pycache__
