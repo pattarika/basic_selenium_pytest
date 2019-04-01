@@ -1,4 +1,4 @@
-from sharepoint import SharePoint
+from libs.sharepoint import SharePoint
 import unittest
 from unittest.mock import patch
 

@@ -8,7 +8,7 @@ from selenium.webdriver import ActionChains
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import time
-from du_login import Login
+from libs.du_login import Login
 
 
 class SharePoint():

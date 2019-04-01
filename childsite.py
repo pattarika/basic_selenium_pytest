@@ -1,4 +1,4 @@
-from sharepoint import SharePoint
+from libs.sharepoint import SharePoint
 
 
 sp = SharePoint('firefox', 'account.txt')
