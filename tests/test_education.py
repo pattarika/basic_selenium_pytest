@@ -1,22 +1,26 @@
 from sharepoint import SharePoint
+import pytest
 import unittest
 #from unittest.mock import patch
 
 
 class Test_Education(unittest.TestCase):
     
+    @classmethod
     def setUp(request):
-        self.sp = SharePoint('firefox', 'account.txt')
-        self.sp.login('pwongcha')
+        sp = SharePoint('firefox', 'E:\\git\\pattarika\\basic_selenium_pytest\\account.txt')
+        sp.login('pwongcha')
 
-    def tearDown(request):
-        print('Tear Down\n')
+        yield
+        sp.driver.close()
 
-    def test_create_newsite(self):
-        self.sp.goto_url('admin', '')
-        title = '0_' + self.sp.getText('id', 'headerText1') + '_tmp'
-        self.sp.toolbar_action('SmtToolbarDropdownNew1', 'Site', 'New SharePoint Site')
-        self.sp.create_newsite(title, title + '_descr', title + '_url')
+    @pytest.fixture()
+    def test_create_newsite():
+        sp = SharePoint()
+        sp.goto_url('admin', '')
+        title = '0_' + sp.getText('id', 'headerText1') + '_tmp'
+        sp.toolbar_action('SmtToolbarDropdownNew1', 'Site', 'New SharePoint Site')
+        sp.create_newsite(title, title + '_descr', title + '_url')
 
     def test_verify_navigation(self):
         title = '0_' + self.sp.getText('id', 'headerText1') + '_tmp'

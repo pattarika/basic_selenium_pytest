@@ -1,17 +1,17 @@
 import pytest
 from selenium import webdriver
-from du_login import Login
+from libs.du_login import Login
 
 
 def pytest_addoption(parser):
     parser.addoption("--driver", action = "store"
-                               , default = "chrome"
+                               , default = "firefox"
                                , help = "Type in browser type")
     parser.addoption("--url"   , action = "store"
-                               , default = "https://education.edu"
+                               , default = "https://education.sptest16.depaul.edu"
                                , help = "url")
     parser.addoption("--file", action = "store"
-                                 , default = "account.txt"
+                                 , default = "E:\\git\\pattarika\\basic_selenium_pytest\\account.txt"
                                  , help = "credentialFile")
     parser.addoption("--username", action = "store"
                                  , default = "username1"
@@ -28,7 +28,9 @@ def driver(request):
     sp = Login(credentialFile)    
     password = sp.get_pwd_by_username(username)
 
-    if driver.lower() == 'chrome':
+    if driver.lower() is None:
+        driver = webdriver.Firefox()
+    elif driver.lower() == 'chrome':
         driver = webdriver.Chrome()
     elif driver.lower() == 'firefox':
         driver = webdriver.Firefox()
