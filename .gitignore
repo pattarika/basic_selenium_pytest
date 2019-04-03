@@ -1,4 +1,8 @@
-account.txt
-venv
-*.log
 __pycache__
+.pytest_cache
+.vscode
+venv
+account.txt
+steps.txt
+*.log
+*_logs

@@ -1,17 +1,15 @@
-from libs.sharepoint import SharePoint
+from sharepoint import SharePoint
 import unittest
-from unittest.mock import patch
+#from unittest.mock import patch
 
 
 class Test_Education(unittest.TestCase):
+    
+    def setUp(request):
+        self.sp = SharePoint('firefox', 'account.txt')
+        self.sp.login('pwongcha')
 
-    @classmethod
-    def setUp(cls):
-        cls.sp = SharePoint('firefox', 'account.txt')
-        cls.sp.login('pwongcha')
-
-    @classmethod
-    def tearDown(cls):
+    def tearDown(request):
         print('Tear Down\n')
 
     def test_create_newsite(self):
