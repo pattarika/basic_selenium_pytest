@@ -6,3 +6,6 @@ account.txt
 steps.txt
 *.log
 *_logs
+pytest*
+Pipfile
+.mypy_cache

@@ -1,7 +1,7 @@
-from sharepoint import SharePoint
+from app.sharepoint import SharePoint
 
-sp = SharePoint('firefox', 'account.txt')
-sp.login('pwongcha')
+sp = SharePoint('firefox', 'account.txt', 'pwongcha')
+sp.login()
 
 sp.goto_url('admin', '')
 header = sp.getText('id', 'headerText1')
@@ -16,7 +16,7 @@ sp.wait(5, 'SiteMgr_ObjectList1UpToParentButton_ItemImg')
 sp.click('id', 'TreeView1t0')
 ID = sp.firstSiteCollectionID()
 sp.click('id', ID)
-# # sp.delete_newsite(ID, title)
+# sp.delete_newsite(ID, title)
 
 # Click link title to view sitting
 title = sp.get_sitename(ID)

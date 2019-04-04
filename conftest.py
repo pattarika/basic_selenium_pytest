@@ -1,12 +1,13 @@
 import pytest
 from selenium import webdriver
-from libs.du_login import Login
+# from app.du_login import Login
+from app.sharepoint import SharePoint
 
 
 def pytest_addoption(parser):
-    parser.addoption("--driver", action = "store"
+    parser.addoption("--browser", action = "store"
                                , default = "firefox"
-                               , help = "Type in browser type")
+                               , help = "Type in browser type (chrome, firefox, ie)")
     parser.addoption("--url"   , action = "store"
                                , default = "https://education.sptest16.depaul.edu"
                                , help = "url")
@@ -14,40 +15,42 @@ def pytest_addoption(parser):
                                  , default = "E:\\git\\pattarika\\basic_selenium_pytest\\account.txt"
                                  , help = "credentialFile")
     parser.addoption("--username", action = "store"
-                                 , default = "username1"
-                                 , help = "campus connect username")                                 
+                                 , default = "pwongcha"
+                                 , help = "campus connect username")
 
 
-@pytest.fixture(scope="session", autouse=True)
-def driver(request):
-    driver = request.config.getoption("--driver")
+@pytest.fixture(name="sp", scope="session", autouse=True)
+def authenticate(request):
+    browser = request.config.getoption("--browser")
     url = request.config.getoption("--url")
     credentialFile = request.config.getoption("--file")
     username = request.config.getoption("--username")
 
-    sp = Login(credentialFile)    
-    password = sp.get_pwd_by_username(username)
-
-    if driver.lower() is None:
+    if browser.lower() is None:
         driver = webdriver.Firefox()
-    elif driver.lower() == 'chrome':
+    elif browser.lower() == 'chrome':
         driver = webdriver.Chrome()
-    elif driver.lower() == 'firefox':
+    elif browser.lower() == 'firefox':
         driver = webdriver.Firefox()
-    elif driver.lower() == 'ie':
+    elif browser.lower() == 'ie':
         driver = webdriver.Ie()
     else:
-        raise Exception('Unknown webdriver type')    
+        raise Exception('Unknown webdriver type')
 
     driver.delete_all_cookies()
-    driver.get(url)    
-    driver.implicitly_wait(5)
-    driver.maximize_window()
-    driver.find_element_by_link_text("Editor Login").click()
-    driver.find_element_by_id("userNameInput").send_keys(username)
-    driver.find_element_by_id("passwordInput").send_keys(password)
-    driver.find_element_by_id("submitButton").click()
-    driver.implicitly_wait(1)
 
-    return driver
+    sp = SharePoint(driver, credentialFile, username)
+    sp.driver.get(url)
+    sp.login()
+    sp.goto_url('admin','')
+    
+    yield sp
+    driver.close()
 
+# @pytest.fixture(scope="session")
+# def get_file(request):
+#     return str(request.config.getoption("--file"))
+
+# @pytest.fixture(scope="session")
+# def get_username(request):
+#     return str(request.config.getoption("--username"))
