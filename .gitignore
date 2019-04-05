@@ -1,11 +1,11 @@
 __pycache__
+.mypy_cache
 .pytest_cache
 .vscode
 venv
 account.txt
 steps.txt
+Pipfile
 *.log
 *_logs
-pytest*
-Pipfile
-.mypy_cache
+pytest-logs.txt

@@ -1,0 +1,21 @@
+---
+
+repo: /e/git/pattarika/basic_selenium_pytest
+
+url_config:
+  site: 'https://resources.sptest16.depaul.edu/test/'
+  admin: '_layouts/15/sitemanager.aspx'
+  site_manager: '/_layouts/15/Settings.aspx'
+  navigation: '/_layouts/15/AreaNavigationSettings.aspx'
+  logo: '/_layouts/15/prjsetng.aspx'
+  default: '/Pages/default.aspx'
+  layout: '/Pages/Forms/AllItems.aspx'
+
+file:
+  credential: './config/account.txt'
+
+browser:
+  type: firefox
+
+credential:
+  username: 'pwongcha'

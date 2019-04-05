@@ -1,15 +1,15 @@
 class Login():
 
     def __init__(self, credentialFile):
-        self.file = open(credentialFile,'r')
+        self.file = open(credentialFile, 'r')
         self.credential = {}
         for line in self.file:
             x = line.split(',')
             username = x[0]
-            password = x[1] 
+            password = x[1]
             c = len(password)-1
             self.credential[username] = password[0:c]
-        
+
     def get_credential(self):
         return list(self.credential)
 

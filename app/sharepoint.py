@@ -1,33 +1,55 @@
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver import ActionChains
-from selenium import webdriver
-from bs4 import BeautifulSoup
 import time
+import yaml
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver import ActionChains
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from app.du_login import Login
 
 
 class SharePoint():
 
-    def __init__(self, driver, file, username):
-        self.site = 'https://education.sptest16.depaul.edu/'
-        self.admin_pg = '_layouts/15/sitemanager.aspx'
-        self.setting_pg = '/_layouts/15/Settings.aspx'
-        self.nav_pg = '/_layouts/15/AreaNavigationSettings.aspx'
-        self.logo_pg = '/_layouts/15/prjsetng.aspx'
-        self.default_pg = '/Pages/default.aspx'
-        self.layout_pg = '/Pages/Forms/AllItems.aspx'
+    def __init__(self, driver=None, pytest='T'):
+        with open('./config/config.yaml') as f:
+            config = yaml.safe_load(f)
+
+        self.site = config['url_config']['site']
+        self.admin_pg = config['url_config']['admin']
+        self.setting_pg = config['url_config']['site_manager']
+        self.nav_pg = config['url_config']['navigation']
+        self.logo_pg = config['url_config']['logo']
+        self.default_pg = config['url_config']['default']
+        self.layout_pg = config['url_config']['layout']
+        self.username = config['credential']['username']
+        self.browser = config['browser']['type']
         self.driver = driver
-        self.credential = Login(file)
-        self.username = username
+        
+        self.credential = Login(config['file']['credential'])
+        
+        if pytest == 'F':
+            if self.browser.lower() == 'chrome':
+                self.driver = webdriver.Chrome()
+            elif self.browser.lower() == 'firefox':
+                self.driver = webdriver.Firefox()
+            elif self.browser.lower() == 'ie':
+                self.driver = webdriver.Ie()
+            else:
+                raise Exception('Unknown webdriver type')
+            self.driver.delete_all_cookies()
+        
+        self.driver.get(self.site)
 
     def login(self):
         password = self.credential.get_pwd_by_username(self.username)
-        self.driver.find_element_by_link_text("Editor Login").click()
-        self.driver.find_element_by_id("userNameInput").send_keys(self.username)
-        self.driver.find_element_by_id("passwordInput").send_keys(password)
-        self.driver.find_element_by_id("submitButton").click()
+    
+        if self.site != 'https://resources.sptest16.depaul.edu/test/':
+            self.driver.find_element_by_link_text('Editor Login').click()
+        
+        self.driver.find_element_by_id('userNameInput').send_keys(self.username)
+        self.driver.find_element_by_id('passwordInput').send_keys(password)
+        self.driver.find_element_by_id('submitButton').click()
         self.driver.implicitly_wait(1)
 
     def find_by_id(self, id_value, action, fld_value):
@@ -42,7 +64,6 @@ class SharePoint():
         return self.driver.find_element_by_tag_name('h1').text
 
     def goto_url(self, name, url=None):
-        print(url)
         if name == 'admin':
             self.driver.get(self.site + self.admin_pg)
         if name == 'setting':
@@ -65,9 +86,9 @@ class SharePoint():
 
     def click_js(self, type, text):
         if type == 'id':
-            self.driver.execute_script("document.getElementById(" + text + ").click()")
+            self.driver.execute_script('document.getElementById(' + text + ').click()')
         if type == 'class':
-            self.driver.execute_script("document.getElementsByClassName(" + text + ").click()")
+            self.driver.execute_script('document.getElementsByClassName(' + text + ').click()')
 
     def click(self, type, text):
         if type == 'id':
