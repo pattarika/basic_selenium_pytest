@@ -1,15 +1,15 @@
 import pytest
+import allure
 from selenium import webdriver
-# from app.du_login import Login
 from app.sharepoint import SharePoint
 
 
 def pytest_addoption(parser):
-    parser.addoption('--browser', action = 'store'
+    parser.addoption('--browse', action = 'store'
                                 , default = 'firefox'
             , help = 'Type in browser type (chrome, firefox, ie)')
     parser.addoption('--url'    , action = 'store'
-                        , default = 'https://resources.sptest16.depaul.edu/test/'
+                        , default = 'https://resources.sptest16.depaul.edu/'
                                 , help = 'url')
     parser.addoption('--file'    , action = 'store'
                                  , default = './config/account.txt'
@@ -21,25 +21,22 @@ def pytest_addoption(parser):
 
 @pytest.fixture(name='sp', scope='session')
 def childsite(request):
-    browser = request.config.getoption('--browser')
+    driver = request.config.getoption('--browse')
     url = request.config.getoption('--url')
     credentialFile = request.config.getoption('--file')
     username = request.config.getoption('--username')
 
-    if browser.lower() is None:
-        driver = webdriver.Firefox()
-    elif browser.lower() == 'chrome':
+    if driver.lower() == 'chrome':
         driver = webdriver.Chrome()
-    elif browser.lower() == 'firefox':
+    elif driver.lower() == 'firefox':
         driver = webdriver.Firefox()
-    elif browser.lower() == 'ie':
+    elif driver.lower() == 'ie':
         driver = webdriver.Ie()
     else:
         raise Exception('Unknown webdriver type')
 
     sp = SharePoint(driver, pytest='T')
     sp.login()
-    sp.goto_url('admin', '')
 
     yield sp
     driver.close()

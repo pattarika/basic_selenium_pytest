@@ -1,6 +1,8 @@
 import pytest
 from selenium import webdriver
 from app.sharepoint import SharePoint
+from selenium.webdriver.common.by import By
+import allure
 
 # @pytest.fixture(name='sp', scope='module')
 @pytest.mark.skip
@@ -24,40 +26,53 @@ def childsite(browser='firefox'):
     driver.close()
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_create_newsite(sp):
     sp.goto_url('admin', '')
-    title = '0_' + sp.getText('id', 'headerText1') + '_test'
+    title = '0_' + sp.getText('id', 'headerText1') + '_tmp'
     sp.toolbar_action('SmtToolbarDropdownNew1', 'Site', 'New SharePoint Site')
-    sp.create_newsite(title, title + '_descr', title + '_url')
+    success = sp.create_newsite(title, title + '_descr', title + '_url')
+    assert success is True
 
 
+# @pytest.mark.skip
 def test_verify_navigation(sp):
     sp.goto_url('admin', '')
-    title = '0_' + sp.getText('id', 'headerText1') + '_test'
+    title = '0_' + sp.getText('id', 'headerText1') + '_tmp'
     url = title + '_url'
     sp.goto_url('navigation', url)
-    sp.wait(10, 'c`tl00_PlaceHolderMain_ctl05_RptControls_bottomOKButton')
+    sp.wait(5, 'c`tl00_PlaceHolderMain_ctl05_RptControls_bottomOKButton')
+    assert sp.is_checked('ctl00_PlaceHolderMain_globalNavSection_ctl03_inheritTopNavRadioButton') is True
+    assert sp.is_checked('ctl00_PlaceHolderMain_currentNavSection_ctl03_inheritLeftNavRadioButton') is True
+    assert sp.is_checked('ctl00_PlaceHolderMain_globalNavSection_ctl03_globalIncludeSubSites') is True
+    assert sp.is_checked('ctl00_PlaceHolderMain_currentNavSection_ctl03_currentIncludeSubSites') is True
 
 
+# @pytest.mark.skip
 def test_verify_layout(sp):
     sp.goto_url('admin', '')
-    title = '0_' + sp.getText('id', 'headerText1') + '_test'
+    title = '0_' + sp.getText('id', 'headerText1') + '_tmp'
     url = title + '_url'
     sp.goto_url('layout', url)
+    elem = sp.driver.find_element_by_link_text('Two Column Layout')
+    assert '/_catalogs/masterpage/two-column.aspx' in elem.get_attribute('href')
 
 
 def test_verify_history(sp):
     sp.goto_url('admin', '')
-    title = '0_' + sp.getText('id', 'headerText1') + '_test'
+    title = '0_' + sp.getText('id', 'headerText1') + '_tmp'
     url = title + '_url'
     sp.goto_url('default', url)
-    sp.wait(10, 'Ribbon.WikiPageTab-title')
+
     sp.click('id', 'Ribbon.WikiPageTab-title')
     sp.click_js('id', '\'' + 'Ribbon.WikiPageTab.EditAndCheckout.SaveEdit-SelectedItem' + '\'')
     sp.click('id', 'Ribbon.WikiPageTab-title')
     sp.click_js('id', '\'' + 'Ribbon.WikiPageTab.Manage.VersionDiff-Medium' + '\'')
     sp.click('id', 'ctl00_PlaceHolderMain_ctl00_ctl00_toolBarTbl_RptControls_diidIOVersions_LinkText')
+
+    table = sp.driver.find_element(By.CLASS_NAME, 'ms-settingsframe')
+    assert '0.2' in table.text
+    assert 'Title Welcome' in table.text
 
 
 # @pytest.fixture

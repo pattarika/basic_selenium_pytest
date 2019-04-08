@@ -3,7 +3,7 @@
 repo: /e/git/pattarika/basic_selenium_pytest
 
 url_config:
-  site: 'https://resources.sptest16.depaul.edu/test/'
+  site: 'https://resources.sptest16.depaul.edu/'
   admin: '_layouts/15/sitemanager.aspx'
   site_manager: '/_layouts/15/Settings.aspx'
   navigation: '/_layouts/15/AreaNavigationSettings.aspx'

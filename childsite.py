@@ -1,5 +1,6 @@
 from app.sharepoint import SharePoint
 
+
 sp = SharePoint(pytest='F')
 sp.login()
 
@@ -8,6 +9,7 @@ header = sp.getText('id', 'headerText1')
 print('1: ', header)
 
 title = '0_' + header + '_tmp'
+
 sp.toolbar_action('SmtToolbarDropdownNew1', 'Site', title)
 sp.create_newsite(title, title + '_desc', title + '_url')
 sp.wait(5, 'SiteMgr_ObjectList1UpToParentButton_ItemImg')
@@ -19,7 +21,7 @@ sp.click('id', ID)
 # sp.delete_newsite(ID, title)
 
 # Click link title to view sitting
-title = sp.get_sitename(ID)
+title = sp.get_sitename()
 sp.click('id', sp.link_action())
 
 if header != sp.getText('id', 'headerText1'):
